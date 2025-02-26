@@ -122,8 +122,8 @@ int main(){
 
   std::cout << "GCD" << std::endl;
 
-  BigInteger op1("1321321566454645664654465");
-  BigInteger op2("131215945456464645");
+  BigInteger op1("20");
+  BigInteger op2("10");
 
   BigInteger res = gcd(op1, op2);
   std::cout << "GCD: " << res << std::endl;
