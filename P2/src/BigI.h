@@ -7,6 +7,7 @@ class BigInteger {
   public:
   BigInteger(int n = 0);
   BigInteger(const BigUnsigned<Base>&);
+  BigInteger(const char*);
 
   BigInteger& operator=(const BigInteger&);
 
@@ -271,27 +272,35 @@ BigInteger<Base> BigInteger<Base>::operator*(const BigInteger<Base>& a) const {
 
 template <unsigned char Base>
 BigInteger<Base> BigInteger<Base>::operator-(const BigInteger<Base>& a) const {
-  if(this->IsNegative && !a.IsNegative){
-    BigInteger<Base> temp = a;
-    temp.IsNegative = true;
-    return *this + temp;
-  } else if(!this->IsNegative && a.IsNegative){
-    BigInteger<Base> temp = a;
-    temp.IsNegative = false;
-    return *this + temp;
-  } else if(this->IsNegative && a.IsNegative){
-    BigInteger<Base> temp = a;
-    temp.IsNegative = false;
-    return temp - *this;
-  } else {
-    if(*this < a){
-      BigInteger<Base> temp = a - *this;
-      temp.IsNegative = true;
-      return temp;
-    }
-    BigUnsigned<Base> temp = this->num - a.num;
-    return BigInteger<Base>(temp);
-  } 
+ // Caso: (-A) - (B) = -(A + B)
+ if (this->IsNegative && !a.IsNegative) {
+  BigInteger<Base> temp = *this;
+  temp.IsNegative = false;  // Convertimos a positivo
+  BigInteger<Base> result = temp + a;
+  result.IsNegative = true; // Negamos el resultado
+  return result;
+}
+
+// Caso: (A) - (-B) = A + B
+if (!this->IsNegative && a.IsNegative) {
+  return *this + BigInteger<Base>(a.num);
+}
+
+// Caso: (-A) - (-B) = B - A
+if (this->IsNegative && a.IsNegative) {
+  return BigInteger<Base>(a.num) - BigInteger<Base>(this->num);
+}
+
+// Caso: A - B (ambos positivos)
+if (*this < a) {
+  BigInteger<Base> temp = a - *this;
+  temp.IsNegative = true; // Si A < B, el resultado es negativo
+  return temp;
+}
+
+// Resta normal de positivos
+BigUnsigned<Base> temp = this->num - a.num;
+return BigInteger<Base>(temp);
 }
 
 template <unsigned char Base>
@@ -427,6 +436,25 @@ BigInteger<Base>::BigInteger(int n){
   }
   BigUnsigned<Base> temp(n);
   this->num = temp;
+}
+
+template <unsigned char Base>
+BigInteger<Base>::BigInteger(const char* a){
+  std::string temp(a);
+  if(temp[0] == '-'){
+    this->IsNegative = true;
+    temp = temp.substr(1);
+  } else {
+    this->IsNegative = false;
+  }
+  for(int i = 0; i < temp.size(); i++){
+    if(!isdigit(temp[i])){
+      std::cerr << "Invalid input" << std::endl;
+      exit(1);
+    }
+  }
+  BigUnsigned<Base> temp2(temp.c_str());
+  this->num = temp2;
 }
 
 

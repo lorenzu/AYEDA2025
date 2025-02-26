@@ -84,6 +84,8 @@ void readAndProcessFile(const std::string& filename) {
 }
 
 int main() {
-    readAndProcessFile("ex.txt");
+    readAndProcessFile("./src/ex.txt");
+    //readAndProcessFile("ex.txt");
+
     return 0;
 }

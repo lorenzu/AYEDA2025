@@ -408,24 +408,9 @@ BigUnsigned<Base>::BigUnsigned(const char* a) {
     // Limpiar cualquier dato anterior en digits
     digits.clear();
 
-    // Verificar si el número es hexadecimal
-    bool isHex = false;
-
-    // Revisamos si hay caracteres hexadecimales (A-F o a-f)
-    for (int i = 0; a[i] != '\0'; ++i) {
-        if (isxdigit(a[i])) {
-            if (isalpha(a[i])) {
-                isHex = true;
-                break;
-            }
-        } else {
-            std::cerr << "Invalid input" << std::endl;
-            exit(1);
-        }
-    }
 
     // Convertir si es hexadecimal
-    if (isHex) {
+    if (Base == 16) {
         // Convertir el número hexadecimal a decimal manualmente, sin usar long long
         for (int i = 0; a[i] != '\0'; ++i) {
             unsigned char c = a[i];
