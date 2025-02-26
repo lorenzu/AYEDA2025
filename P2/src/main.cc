@@ -99,8 +99,28 @@ void readAndProcessFile(const std::string& filename) {
     std::cout << "N2: " << n2 << std::endl;
     std::cout << "Sum: " << sum << std::endl;
     std::cout << "Difference: " << diff << std::endl;
-  } 
+  } else if(base == 8){
+    // **Paso 2: Convertir a BigInteger y BigUnsigned**
+    BigInteger<8> n1_num(n1_num_str.c_str());
+    BigUnsigned<8> n1_den(n1_den_str.c_str()); // Puede ser negativo
 
+    BigInteger<8> n2_num(n2_num_str.c_str());
+    BigUnsigned<8> n2_den(n2_den_str.c_str()); // Puede ser negativo
+
+    // **Paso 4: Crear BigRational**
+    BigRational<8> n1(n1_num, n1_den);
+    BigRational<8> n2(n2_num, n2_den);
+
+    // **Paso 5: Operaciones**
+    BigRational<8> sum = n1 + n2;
+    BigRational<8> diff = n1 - n2;
+
+    std::cout << "N1: " << n1 << std::endl;
+    std::cout << "N2: " << n2 << std::endl;
+    std::cout << "Sum: " << sum << std::endl;
+    std::cout << "Difference: " << diff << std::endl;
+  }
+ 
     
 }
 

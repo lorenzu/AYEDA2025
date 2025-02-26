@@ -361,8 +361,39 @@ std::ostream& operator<<(std::ostream& os, const BigUnsigned<Base>& num) {
 
     std::reverse(hexStr.begin(), hexStr.end());  // Invertimos el orden de los caracteres
     os << hexStr;
-  }
-    else {
+  } else if(Base == 8){
+    BigUnsigned<Base> zero;
+    BigUnsigned<Base> temp = num;
+    BigUnsigned<Base> mod;
+    BigUnsigned<Base> eight(8);
+    std::string octStr;  // Almacena los dígitos en orden correcto
+
+    while (zero < temp) {  // Usamos el operador < sobrecargado
+      mod = temp % eight;
+
+      // Convertimos el dígito a su valor numérico
+      int digitValue = 0;
+      for (int i = 0; i < mod.digits.size(); i++) {
+        digitValue = digitValue * 10 + (mod.digits[i] - '0');
+      }
+
+      // Añadimos el valor al string octStr
+      if (digitValue >= 0 && digitValue <= 7) {
+        octStr += static_cast<char>(digitValue + '0');  // Dígitos 0-7 para octal
+      } else {
+        std::cerr << "ERROR: valor inesperado en digit = " << digitValue << std::endl;
+        return os;  // Evita imprimir caracteres no válidos
+      }
+
+      temp = temp / eight;
+    }
+
+    std::reverse(octStr.begin(), octStr.end());  // Invertimos el orden de los caracteres
+    os << octStr;
+
+
+
+  } else {
     for (int i = 0; i < num.digits.size(); i++) {
       os << static_cast<char>(num.digits[i]);
     }
@@ -444,10 +475,40 @@ template <unsigned char Base>
 BigUnsigned<Base>::BigUnsigned(const char* a) {
     // Limpiar cualquier dato anterior en digits
     digits.clear();
+    if(Base == 8){
+      while (*a != '\0') {
+          unsigned char c = *a;
+          unsigned char digitValue = 0;
 
+          // Convertir el carácter octal a su valor decimal
+          if (isdigit(c)) {
+              digitValue = c - '0';  // '0' a '7' -> 0 a 7
+          } else {
+              std::cerr << "Invalid character in octal number: " << c << std::endl;
+              exit(1);  // Si encontramos un carácter no válido en octal
+          }
 
-    // Convertir si es hexadecimal
-    if (Base == 16) {
+          // Procesar el valor octal y almacenarlo en el vector digits
+          unsigned char carry = digitValue;  // El acarreo es inicialmente el valor del dígito
+
+          // Iteramos sobre los dígitos existentes y los multiplicamos por 8
+          size_t digitsSize = digits.size();
+          for (size_t j = 0; j < digitsSize; ++j) {
+              unsigned char currentDigit = digits[digits.size() - j - 1] - '0';  // Convertir el char a valor numérico
+              unsigned char result = currentDigit * 8 + carry;  // Multiplicamos por 8 y sumamos el acarreo
+              digits[digits.size() - j - 1] = (result % 10) + '0';  // El dígito actual
+              carry = result / 10;  // El acarreo será el valor que excede el valor de la base 10
+          }
+
+          // Si hay acarreo, insertamos al principio
+          while (carry > 0) {
+              digits.insert(digits.begin(), (carry % 10) + '0');
+              carry /= 10;
+          }
+
+          ++a;  // Avanzamos al siguiente carácter
+      }
+    } else if (Base == 16) {
         // Convertir el número hexadecimal a decimal manualmente, sin usar long long
         for (int i = 0; a[i] != '\0'; ++i) {
             unsigned char c = a[i];
@@ -882,6 +943,5 @@ BigUnsigned<2> BigUnsigned<2>::operator--(int){
   --(*this);
   return temp;
 }
-
 
 #endif
