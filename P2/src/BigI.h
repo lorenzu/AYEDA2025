@@ -447,6 +447,7 @@ BigInteger<Base>::BigInteger(const char* a){
   } else {
     this->IsNegative = false;
   }
+  if(Base != 16){
   for(int i = 0; i < temp.size(); i++){
     if(!isdigit(temp[i])){
       std::cerr << "Invalid input" << std::endl;
@@ -455,6 +456,10 @@ BigInteger<Base>::BigInteger(const char* a){
   }
   BigUnsigned<Base> temp2(temp.c_str());
   this->num = temp2;
+  } else {
+    BigUnsigned<Base> temp2(temp.c_str());
+    this->num = temp2;
+  }
 }
 
 

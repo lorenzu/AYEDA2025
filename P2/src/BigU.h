@@ -327,8 +327,45 @@ BigUnsigned<Base> BigUnsigned<Base>::operator--(int){
 
 template <unsigned char Base>
 std::ostream& operator<<(std::ostream& os, const BigUnsigned<Base>& num) {
-  for (int i = 0; i < num.digits.size(); i++) {
-    os << static_cast<char>(num.digits[i]);
+  if (Base == 16) {
+    BigUnsigned<Base> zero;
+    BigUnsigned<Base> temp = num;
+    BigUnsigned<Base> mod;
+    BigUnsigned<Base> sixteen(16);
+    std::string hexStr;  // Almacena los dígitos en orden correcto
+
+    while (zero < temp) {  // Usamos el operador < sobrecargado
+      mod = temp % sixteen;
+
+      // DEPURACIÓN: Ver qué valores se están obteniendo
+      
+      int digitValue = 0;
+      for (int i = 0; i < mod.digits.size(); i++) {
+        // Convertimos el carácter a su valor numérico (por ejemplo, '0' a 0, '1' a 1, etc.)
+        digitValue = digitValue * 10 + (mod.digits[i] - '0');
+      }  // Convertimos el primer carácter a su valor numérico
+
+      // DEPURACIÓN: Ver qué valores se están obteniendo
+
+      if (digitValue >= 0 && digitValue <= 9) {
+        hexStr += static_cast<char>(digitValue + '0');  // Dígitos 0-9
+      } else if (digitValue >= 10 && digitValue <= 15) {
+        hexStr += static_cast<char>(digitValue - 10 + 'A');  // Letras A-F
+      } else {
+        std::cerr << "ERROR: valor inesperado en digit = " << digitValue << std::endl;
+        return os;  // Evita imprimir caracteres no válidos
+      }
+
+      temp = temp / sixteen;
+    }
+
+    std::reverse(hexStr.begin(), hexStr.end());  // Invertimos el orden de los caracteres
+    os << hexStr;
+  }
+    else {
+    for (int i = 0; i < num.digits.size(); i++) {
+      os << static_cast<char>(num.digits[i]);
+    }
   }
   return os;
 }

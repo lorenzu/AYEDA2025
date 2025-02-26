@@ -79,13 +79,35 @@ void readAndProcessFile(const std::string& filename) {
     std::cout << "N2: " << n2 << std::endl;
     std::cout << "Sum: " << sum << std::endl;
     std::cout << "Difference: " << diff << std::endl;
-  }
+  } else if(base == 16){
+    // **Paso 2: Convertir a BigInteger y BigUnsigned**
+    BigInteger<16> n1_num(n1_num_str.c_str());
+    BigUnsigned<16> n1_den(n1_den_str.c_str()); // Puede ser negativo
+
+    BigInteger<16> n2_num(n2_num_str.c_str());
+    BigUnsigned<16> n2_den(n2_den_str.c_str()); // Puede ser negativo
+
+    // **Paso 4: Crear BigRational**
+    BigRational<16> n1(n1_num, n1_den);
+    BigRational<16> n2(n2_num, n2_den);
+
+    // **Paso 5: Operaciones**
+    BigRational<16> sum = n1 + n2;
+    BigRational<16> diff = n1 - n2;
+
+    std::cout << "N1: " << n1 << std::endl;
+    std::cout << "N2: " << n2 << std::endl;
+    std::cout << "Sum: " << sum << std::endl;
+    std::cout << "Difference: " << diff << std::endl;
+  } 
+
     
 }
 
 int main() {
     readAndProcessFile("./src/ex.txt");
     //readAndProcessFile("ex.txt");
+
 
     return 0;
 }
