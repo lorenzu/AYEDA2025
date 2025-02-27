@@ -4,6 +4,10 @@
 #include <string>
 #include "BigR.h" // Incluye la cabecera de BigRational
 
+
+
+
+
 void readAndProcessFile(const std::string& filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
