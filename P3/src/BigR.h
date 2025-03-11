@@ -32,6 +32,8 @@ class BigRational: public BigNumber<Base>{
   //BigNumber<Base>& multiply(const BigNumber<Base>&) const override;
   //BigNumber<Base>& divide(const BigNumber<Base>&) const override;
   operator BigInteger<Base>() const override;
+  operator BigRational<Base>() const override;
+  operator BigUnsigned<Base>() const override;
 
   protected:
   std::ostream& write(std::ostream&) const override;
@@ -41,6 +43,30 @@ class BigRational: public BigNumber<Base>{
   BigInteger<Base> numerador;
   BigUnsigned<Base> denominador;
 };
+
+//operador BigRational
+template <unsigned char Base>
+BigRational<Base>::operator BigRational<Base>() const{
+  return *this;
+}
+
+template <unsigned char Base>
+BigRational<Base>::operator BigInteger<Base>() const{
+  BigInteger<Base> temp(this->numerador);
+  return temp;
+}
+
+template <unsigned char Base>
+BigRational<Base>::operator BigUnsigned<Base>() const{
+  BigUnsigned<Base> temp(this->numerador);
+  return temp;
+}
+
+template <unsigned char Base>
+std::ostream& BigRational<Base>::write(std::ostream& os) const{
+  os << this->numerador << "/" << this->denominador;
+  return os;
+}
 
 
 template <unsigned char Base>

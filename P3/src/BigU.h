@@ -11,8 +11,10 @@
 #include <sstream>
 #include <algorithm>
 
+#include "BigNumber.h"
+
 template <unsigned char Base>
-class BigUnsigned{
+class BigUnsigned : public BigNumber<Base> {
   public:
   BigUnsigned(unsigned n = 0);
   BigUnsigned(const char*);
@@ -44,11 +46,48 @@ class BigUnsigned{
   template<unsigned char B>
   friend BigUnsigned<B> operator/(const BigUnsigned<B>&, const BigUnsigned<B>&);
   BigUnsigned<Base> operator%(const BigUnsigned<Base>&) const;
+
+
+  operator BigInteger<Base>() const override;
+  operator BigRational<Base>() const override;
+  operator BigUnsigned<Base>() const override;
+
+  protected:
+  std::ostream& write(std::ostream&) const override;
+  //std::istream& read(std::istream&) override;
+
   
   private:
   std::vector<unsigned char> digits;
 
 };
+
+//write
+template <unsigned char Base>
+std::ostream& BigUnsigned<Base>::write(std::ostream& os) const{
+  for(int i = 0; i < digits.size(); i++){
+    os << digits[i];
+  }
+  return os;
+}
+
+template <unsigned char Base>
+BigUnsigned<Base>::operator BigInteger<Base>() const{
+  BigInteger<Base> temp(*this);
+  return temp;
+}
+
+template <unsigned char Base>
+BigUnsigned<Base>::operator BigRational<Base>() const{
+  BigInteger<Base> temp(*this);
+  BigRational<Base> temp2(temp);
+  return temp2;  
+}
+
+template <unsigned char Base>
+BigUnsigned<Base>::operator BigUnsigned<Base>() const{
+  return *this;
+}
 
 
 

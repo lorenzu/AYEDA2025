@@ -11,6 +11,9 @@ class BigInteger;
 template <unsigned char Base>
 class BigRational;
 
+template <unsigned char Base>
+class BigUnsigned;
+
 // **Clase base para todos los números grandes**
 template <unsigned char Base>
 class BigNumber {
@@ -22,7 +25,8 @@ public:
    // virtual BigNumber<Base>& divide(const BigNumber<Base>&) const = 0;
 
     virtual operator BigInteger<Base>() const = 0;
-    //virtual operator BigRational<Base>() const = 0;
+    virtual operator BigRational<Base>() const = 0;
+    virtual operator BigUnsigned<Base>() const = 0;
 
     static BigNumber<Base>* create(const char*);  // Factory method
 
@@ -39,6 +43,8 @@ class BigNumberBadDigit : public std::exception {};
 class BigNumberDivisionByZero : public std::exception {};
 
 #include "BigI.h"  // Incluir después de la declaración de BigNumber<Base>
+#include "BigR.h"  // Incluir después de la declaración de BigNumber<Base>
+#include "BigU.h"  // Incluir después de la declaración de BigNumber<Base>
 
 // **Implementación de `create`**
 template <unsigned char Base>
@@ -55,6 +61,25 @@ BigNumber<Base>* BigNumber<Base>::create(const char* str) {
       input.pop_back(); // Eliminar el sufijo 'i'
       return new BigInteger<Base>(input.c_str());
   }
+      // Si termina en 'u', creamos un BigUnsigned
+      if (input.back() == 'u') {
+        input.pop_back(); // Eliminar el sufijo 'u'
+        return new BigUnsigned<Base>(input.c_str());
+    }
+
+  // Si contiene '/', creamos un BigRational
+  if (input.find('/') != std::string::npos && input.back() == 'r') {
+    input.pop_back(); // Eliminar el sufijo 'r'
+    size_t pos = input.find('/');  
+    if (pos == std::string::npos) {
+        std::cerr << "Error: Formato incorrecto para BigRational." << std::endl;
+        return nullptr;
+    }
+    std::string numerator = input.substr(0, pos);
+    std::string denominator = input.substr(pos + 1);
+    return new BigRational<Base>(numerator.c_str(), denominator.c_str());
+}
+
 
   std::cerr << "Error: Tipo de número grande no reconocido." << std::endl;
   return nullptr;

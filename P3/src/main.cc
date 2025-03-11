@@ -2,21 +2,18 @@
 #include <sstream>
 #include <iostream>
 #include <string>
-//#include "BigR.h" // Incluye la cabecera de BigRational
 #include "BigNumber.h" // Incluye la cabecera de BigNumber
-
-
-
-
+#include "BigR.h" // Incluye la cabecera de BigRational
 
 int main() {
-    //readAndProcessFile("./src/ex.txt");
-    //readAndProcessFile("ex.txt");
-    BigNumber<10>* n1 = BigNumber<10>::create("123i");
+    constexpr unsigned char Base = 10;
 
-    std::cout << *n1 << std::endl;
+    // Crear un BigInteger a través de la fábrica
+    BigNumber<Base>* bigNumInt = BigNumber<Base>::create("42u");
+    std::cout << "BigNumber (BigUnsigned): " << *bigNumInt << std::endl;
 
-
+    // Liberar memoria
+    delete bigNumInt;
 
     return 0;
 }

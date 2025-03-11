@@ -2,6 +2,7 @@
 #define BIGINT_H
 #include "BigU.h"
 #include "BigNumber.h"
+#include "BigR.h"
 
 template <unsigned char Base>
 class BigInteger : public BigNumber<Base> { 
@@ -42,6 +43,9 @@ class BigInteger : public BigNumber<Base> {
   //BigNumber<Base>& multiply(const BigNumber<Base>&) const override;
   //BigNumber<Base>& divide(const BigNumber<Base>&) const override;
   operator BigInteger<Base>() const override;
+  operator BigRational<Base>() const override;
+  operator BigUnsigned<Base>() const override;
+
 
   protected:
   std::ostream& write(std::ostream&) const override;
@@ -491,6 +495,20 @@ template <unsigned char Base>
 BigInteger<Base>::operator BigInteger<Base>() const{
   return *this;
 }
+
+template <unsigned char Base>
+BigInteger<Base>::operator BigRational<Base>() const{
+  BigInteger<Base> temp1(this->num);
+  BigRational<Base> temp2(temp1, 1);
+  return temp2;
+}
+
+template <unsigned char Base>
+BigInteger<Base>::operator BigUnsigned<Base>() const{
+  BigUnsigned<Base> temp(this->num);
+  return temp;
+}
+
 
 
 #endif
