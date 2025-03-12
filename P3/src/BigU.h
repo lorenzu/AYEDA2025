@@ -48,7 +48,9 @@ class BigUnsigned : public BigNumber<Base> {
   BigUnsigned<Base> operator%(const BigUnsigned<Base>&) const;
 
   BigNumber<Base>& add(const BigNumber<Base>&) const override;
-
+  BigNumber<Base>& subtract(const BigNumber<Base>&) const override;
+  BigNumber<Base>& multiply(const BigNumber<Base>&) const override;
+  BigNumber<Base>& divide(const BigNumber<Base>&) const override;
 
   operator BigInteger<Base>() const override;
   operator BigRational<Base>() const override;
@@ -63,6 +65,27 @@ class BigUnsigned : public BigNumber<Base> {
   std::vector<unsigned char> digits;
 
 };
+
+template <unsigned char Base>
+BigNumber<Base>& BigUnsigned<Base>::divide(const BigNumber<Base>& a) const{
+  BigUnsigned<Base> temp = dynamic_cast<const BigUnsigned<Base>&>(a);
+  BigUnsigned<Base> *result = new BigUnsigned<Base>(*this / temp);
+  return *result;
+}
+
+template <unsigned char Base>
+BigNumber<Base>& BigUnsigned<Base>::multiply(const BigNumber<Base>& a) const{
+  BigUnsigned<Base> temp = dynamic_cast<const BigUnsigned<Base>&>(a);
+  BigUnsigned<Base> *result = new BigUnsigned<Base>(*this * temp);
+  return *result;
+}
+
+template <unsigned char Base>
+BigNumber<Base>& BigUnsigned<Base>::subtract(const BigNumber<Base>& a) const{
+  BigUnsigned<Base> temp = dynamic_cast<const BigUnsigned<Base>&>(a);
+  BigUnsigned<Base> *result = new BigUnsigned<Base>(*this - temp);
+  return *result;
+}
 
 template <unsigned char Base>
 BigNumber<Base>& BigUnsigned<Base>::add(const BigNumber<Base>& a) const{

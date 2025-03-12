@@ -39,9 +39,10 @@ class BigInteger : public BigNumber<Base> {
   BigInteger<Base> operator%(const BigInteger<Base>&) const;
 
   BigNumber<Base>& add(const BigNumber<Base>&) const override;
-  //BigNumber<Base>& subtract(const BigNumber<Base>&) const override;
-  //BigNumber<Base>& multiply(const BigNumber<Base>&) const override;
-  //BigNumber<Base>& divide(const BigNumber<Base>&) const override;
+  BigNumber<Base>& subtract(const BigNumber<Base>&) const override;
+  BigNumber<Base>& multiply(const BigNumber<Base>&) const override;
+  BigNumber<Base>& divide(const BigNumber<Base>&) const override;
+
   operator BigInteger<Base>() const override;
   operator BigRational<Base>() const override;
   operator BigUnsigned<Base>() const override;
@@ -516,6 +517,26 @@ BigNumber<Base>& BigInteger<Base>::add(const BigNumber<Base>& a) const{
   return *result;
 }
 
+template <unsigned char Base>
+BigNumber<Base>& BigInteger<Base>::subtract(const BigNumber<Base>& a) const{
+  const BigInteger<Base>& temp = dynamic_cast<const BigInteger<Base>&>(a);
+  BigInteger<Base> *result = new BigInteger<Base>(*this - temp);
+  return *result;
+}
+
+template <unsigned char Base>
+BigNumber<Base>& BigInteger<Base>::multiply(const BigNumber<Base>& a) const{
+  const BigInteger<Base>& temp = dynamic_cast<const BigInteger<Base>&>(a);
+  BigInteger<Base> *result = new BigInteger<Base>(*this * temp);
+  return *result;
+}
+
+template <unsigned char Base>
+BigNumber<Base>& BigInteger<Base>::divide(const BigNumber<Base>& a) const{
+  const BigInteger<Base>& temp = dynamic_cast<const BigInteger<Base>&>(a);
+  BigInteger<Base> *result = new BigInteger<Base>(*this / temp);
+  return *result;
+}
 
 
 #endif

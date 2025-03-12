@@ -20,9 +20,9 @@ class BigNumber {
 public:
     // Métodos virtuales puros (deben ser implementados por las subclases)
    virtual BigNumber<Base>& add(const BigNumber<Base>&) const = 0;
-   // virtual BigNumber<Base>& subtract(const BigNumber<Base>&) const = 0;
-   // virtual BigNumber<Base>& multiply(const BigNumber<Base>&) const = 0;
-   // virtual BigNumber<Base>& divide(const BigNumber<Base>&) const = 0;
+   virtual BigNumber<Base>& subtract(const BigNumber<Base>&) const = 0;
+   virtual BigNumber<Base>& multiply(const BigNumber<Base>&) const = 0;
+   virtual BigNumber<Base>& divide(const BigNumber<Base>&) const = 0;
 
     virtual operator BigInteger<Base>() const = 0;
     virtual operator BigRational<Base>() const = 0;

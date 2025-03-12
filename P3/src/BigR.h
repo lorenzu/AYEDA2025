@@ -26,11 +26,13 @@ class BigRational: public BigNumber<Base>{
   friend BigRational<B> operator+(const BigRational<B>&, const BigRational<B>&);
   BigRational<Base> operator-(const BigRational<Base>&) const;
   BigRational<Base> operator*(const BigRational<Base>&) const;
+  BigRational<Base> operator/(const BigRational<Base>&) const;
 
   BigNumber<Base>& add(const BigNumber<Base>&) const override;
-  //BigNumber<Base>& subtract(const BigNumber<Base>&) const override;
-  //BigNumber<Base>& multiply(const BigNumber<Base>&) const override;
-  //BigNumber<Base>& divide(const BigNumber<Base>&) const override;
+  BigNumber<Base>& subtract(const BigNumber<Base>&) const override;
+  BigNumber<Base>& multiply(const BigNumber<Base>&) const override;
+  BigNumber<Base>& divide(const BigNumber<Base>&) const override;
+  
   operator BigInteger<Base>() const override;
   operator BigRational<Base>() const override;
   operator BigUnsigned<Base>() const override;
@@ -43,6 +45,27 @@ class BigRational: public BigNumber<Base>{
   BigInteger<Base> numerador;
   BigUnsigned<Base> denominador;
 };
+
+template <unsigned char Base>
+BigNumber<Base>& BigRational<Base>::divide(const BigNumber<Base>& a) const{
+  BigRational<Base> temp = dynamic_cast<const BigRational<Base>&>(a);
+  BigRational<Base> *result = new BigRational<Base>(*this / temp);
+  return *result;
+} 
+
+template <unsigned char Base>
+BigNumber<Base>& BigRational<Base>::multiply(const BigNumber<Base>& a) const{
+  BigRational<Base> temp = dynamic_cast<const BigRational<Base>&>(a);
+  BigRational<Base> *result = new BigRational<Base>(*this * temp);
+  return *result;
+}
+
+template <unsigned char Base>
+BigNumber<Base>& BigRational<Base>::subtract(const BigNumber<Base>& a) const{
+  BigRational<Base> temp = dynamic_cast<const BigRational<Base>&>(a);
+  BigRational<Base> *result = new BigRational<Base>(*this - temp);
+  return *result;
+}
 
 template <unsigned char Base>
 BigNumber<Base>& BigRational<Base>::add(const BigNumber<Base>& a) const{
@@ -125,8 +148,8 @@ template <unsigned char Base>
 BigRational<Base> BigRational<Base>::operator-(const BigRational<Base>& a) const{
   BigRational<Base> temp;
   temp.denominador = this->denominador * a.denominador;
-  BigInteger<Base> temp1 = this->numerador * a.denominador;
-  BigInteger<Base> temp2 = a.numerador * this->denominador;
+  BigInteger<Base> temp1 = BigInteger<Base>(this->numerador) * BigInteger<Base>(a.denominador);
+  BigInteger<Base> temp2 = BigInteger<Base>(a.numerador) * BigInteger<Base>(this->denominador);
   temp.numerador = temp1 - temp2;
   return temp;
 }
@@ -150,4 +173,12 @@ template <unsigned char Base>
 bool BigRational<Base>::operator==(const BigRational<Base>& a) const{
   BigRational<Base> temp(a);
   return *this == temp;
+}
+
+template <unsigned char Base>
+BigRational<Base> BigRational<Base>::operator/(const BigRational<Base>& a) const{
+  BigRational<Base> temp;
+  temp.numerador = this->numerador * BigInteger<Base>(a.denominador);
+  temp.denominador = this->denominador * a.numerador;
+  return temp;
 }

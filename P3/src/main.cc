@@ -34,6 +34,9 @@ private:
                 BigNumber<Base>* result = nullptr;
                 try {
                     if (token == "+") result = &(a->add(*b));
+                    else if (token == "-") result = &(a->subtract(*b));
+                    else if (token == "*") result = &(a->multiply(*b));
+                    else if (token == "/") result = &(a->divide(*b));
                 } catch (exception& e) {
                     cerr << "Error en operación: " << e.what() << endl;
                     result = new BigInteger<Base>("0");
