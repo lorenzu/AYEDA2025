@@ -544,7 +544,7 @@ BigNumber<Base>& BigInteger<Base>::subtract(const BigNumber<Base>& a) const{
     BigRational<Base> thisAsRational(*this, "1");
     return *(new BigRational<Base>(thisAsRational - *ratOther));
 }
-throw std::invalid_argument("Tipo de BigNumber no compatible con add()");
+throw BigNumberBadDigit("Tipo de BigNumber no compatible con substract()");
 }
 
 template <unsigned char Base>
@@ -560,12 +560,15 @@ BigNumber<Base>& BigInteger<Base>::multiply(const BigNumber<Base>& a) const{
     BigRational<Base> thisAsRational(*this, "1");
     return *(new BigRational<Base>(thisAsRational * *ratOther));
 }
-throw std::invalid_argument("Tipo de BigNumber no compatible con add()");
+throw BigNumberBadDigit("Tipo de BigNumber no compatible con multiply()");
 }
 
 template <unsigned char Base>
 BigNumber<Base>& BigInteger<Base>::divide(const BigNumber<Base>& a) const{
   if (const BigInteger<Base>* intOther = dynamic_cast<const BigInteger<Base>*>(&a)) {
+    if (*intOther == 0) {
+        throw BigNumberDivisionByZero("Error: División por cero");
+    }
     return *(new BigInteger<Base>(*this / *intOther));
 } else if (const BigUnsigned<Base>* uintOther = dynamic_cast<const BigUnsigned<Base>*>(&a)) {
     // Convertimos el BigUnsigned a un BigInteger y luego sumamos

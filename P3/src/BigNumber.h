@@ -38,6 +38,24 @@ protected:
     friend std::ostream& operator<<(std::ostream&, const BigNumber<B>&);
 };
 
+class BigNumberException : public std::exception {
+public:
+    explicit BigNumberException(const char* msg) : message(msg) {}
+    virtual const char* what() const noexcept override { return message; }
+
+private:
+    const char* message;
+};
+
+class BigNumberBadDigit : public BigNumberException {
+public:
+    explicit BigNumberBadDigit(const char* msg) : BigNumberException(msg) {}
+};
+
+class BigNumberDivisionByZero : public BigNumberException {
+public:
+    explicit BigNumberDivisionByZero(const char* msg) : BigNumberException(msg) {}
+};
 
 
 #include "BigI.h"  // Incluir después de la declaración de BigNumber<Base>
@@ -70,8 +88,7 @@ BigNumber<Base>* BigNumber<Base>::create(const char* str) {
     input.pop_back(); // Eliminar el sufijo 'r'
     size_t pos = input.find('/');  
     if (pos == std::string::npos) {
-        std::cerr << "Error: Formato incorrecto para BigRational." << std::endl;
-        return nullptr;
+        throw BigNumberBadDigit("Error: No se encontró el delimitador '/' en la entrada.");
     }
     std::string numerator = input.substr(0, pos);
     std::string denominator = input.substr(pos + 1);
@@ -79,8 +96,7 @@ BigNumber<Base>* BigNumber<Base>::create(const char* str) {
 }
 
 
-  std::cerr << "Error: Tipo de número grande no reconocido." << std::endl;
-  return nullptr;
+    throw BigNumberBadDigit("Error: No se encontró un sufijo válido en la entrada.");
 }
 
 // **Sobrecarga del operador `<<`**
