@@ -73,30 +73,72 @@ std::istream& BigUnsigned<Base>::read(std::istream& is){
 
 template <unsigned char Base>
 BigNumber<Base>& BigUnsigned<Base>::divide(const BigNumber<Base>& a) const{
-  BigUnsigned<Base> temp = dynamic_cast<const BigUnsigned<Base>&>(a);
-  BigUnsigned<Base> *result = new BigUnsigned<Base>(*this / temp);
-  return *result;
+  if (const BigUnsigned<Base>* uintOther = dynamic_cast<const BigUnsigned<Base>*>(&a)) {
+    return *(new BigUnsigned<Base>(*this / *uintOther));
+} else if (const BigInteger<Base>* intOther = dynamic_cast<const BigInteger<Base>*>(&a)) {
+    // Convertimos `BigUnsigned` en `BigInteger` para operar
+    BigInteger<Base> thisAsInt(*this);
+    return *(new BigInteger<Base>(thisAsInt / *intOther));
+} else if (const BigRational<Base>* ratOther = dynamic_cast<const BigRational<Base>*>(&a)) {
+    // Convertimos `BigUnsigned` en `BigInteger` y luego en `BigRational`
+    BigInteger<Base> thisAsInt(*this);
+    BigRational<Base> thisAsRational(thisAsInt, "1");
+    return *(new BigRational<Base>(thisAsRational / *ratOther));
+}
+throw std::invalid_argument("Tipo de BigNumber no compatible con multiply()");
 }
 
 template <unsigned char Base>
-BigNumber<Base>& BigUnsigned<Base>::multiply(const BigNumber<Base>& a) const{
-  BigUnsigned<Base> temp = dynamic_cast<const BigUnsigned<Base>&>(a);
-  BigUnsigned<Base> *result = new BigUnsigned<Base>(*this * temp);
-  return *result;
+BigNumber<Base>& BigUnsigned<Base>::multiply(const BigNumber<Base>& a) const {
+    if (const BigUnsigned<Base>* uintOther = dynamic_cast<const BigUnsigned<Base>*>(&a)) {
+        return *(new BigUnsigned<Base>(*this * *uintOther));
+    } else if (const BigInteger<Base>* intOther = dynamic_cast<const BigInteger<Base>*>(&a)) {
+        // Convertimos `BigUnsigned` en `BigInteger` para operar
+        BigInteger<Base> thisAsInt(*this);
+        return *(new BigInteger<Base>(thisAsInt * *intOther));
+    } else if (const BigRational<Base>* ratOther = dynamic_cast<const BigRational<Base>*>(&a)) {
+        // Convertimos `BigUnsigned` en `BigInteger` y luego en `BigRational`
+        BigInteger<Base> thisAsInt(*this);
+        BigRational<Base> thisAsRational(thisAsInt, "1");
+        return *(new BigRational<Base>(thisAsRational * *ratOther));
+    }
+    throw std::invalid_argument("Tipo de BigNumber no compatible con multiply()");
 }
 
 template <unsigned char Base>
 BigNumber<Base>& BigUnsigned<Base>::subtract(const BigNumber<Base>& a) const{
-  BigUnsigned<Base> temp = dynamic_cast<const BigUnsigned<Base>&>(a);
-  BigUnsigned<Base> *result = new BigUnsigned<Base>(*this - temp);
-  return *result;
+  if (const BigUnsigned<Base>* uintOther = dynamic_cast<const BigUnsigned<Base>*>(&a)) {
+    // Suma directa entre dos BigUnsigned
+    return *(new BigUnsigned<Base>(*this - *uintOther));
+} else if (const BigInteger<Base>* intOther = dynamic_cast<const BigInteger<Base>*>(&a)) {
+    // Convertir BigUnsigned a BigInteger antes de sumar
+    BigInteger<Base> thisAsInt(*this);
+    return *(new BigInteger<Base>(thisAsInt - *intOther));
+} else if (const BigRational<Base>* ratOther = dynamic_cast<const BigRational<Base>*>(&a)) {
+    // Convertir BigUnsigned a BigInteger y luego a BigRational antes de sumar
+    BigInteger<Base> thisAsInt(*this);
+    BigRational<Base> thisAsRational(thisAsInt, "1");
+    return *(new BigRational<Base>(thisAsRational - *ratOther));
+}
+throw std::invalid_argument("Tipo de BigNumber no compatible con add()");
 }
 
 template <unsigned char Base>
-BigNumber<Base>& BigUnsigned<Base>::add(const BigNumber<Base>& a) const{
-  BigUnsigned<Base> temp = dynamic_cast<const BigUnsigned<Base>&>(a);
-  BigUnsigned<Base> *result = new BigUnsigned<Base>(*this + temp);
-  return *result;
+BigNumber<Base>& BigUnsigned<Base>::add(const BigNumber<Base>& a) const {
+    if (const BigUnsigned<Base>* uintOther = dynamic_cast<const BigUnsigned<Base>*>(&a)) {
+        // Suma directa entre dos BigUnsigned
+        return *(new BigUnsigned<Base>(*this + *uintOther));
+    } else if (const BigInteger<Base>* intOther = dynamic_cast<const BigInteger<Base>*>(&a)) {
+        // Convertir BigUnsigned a BigInteger antes de sumar
+        BigInteger<Base> thisAsInt(*this);
+        return *(new BigInteger<Base>(thisAsInt + *intOther));
+    } else if (const BigRational<Base>* ratOther = dynamic_cast<const BigRational<Base>*>(&a)) {
+        // Convertir BigUnsigned a BigInteger y luego a BigRational antes de sumar
+        BigInteger<Base> thisAsInt(*this);
+        BigRational<Base> thisAsRational(thisAsInt, "1");
+        return *(new BigRational<Base>(thisAsRational + *ratOther));
+    }
+    throw std::invalid_argument("Tipo de BigNumber no compatible con add()");
 }
 
 //write

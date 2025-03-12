@@ -38,10 +38,7 @@ protected:
     friend std::ostream& operator<<(std::ostream&, const BigNumber<B>&);
 };
 
-// **Excepciones específicas para la jerarquía de BigNumber**
-class BigNumberBaseNotImplemented : public std::exception {};
-class BigNumberBadDigit : public std::exception {};
-class BigNumberDivisionByZero : public std::exception {};
+
 
 #include "BigI.h"  // Incluir después de la declaración de BigNumber<Base>
 #include "BigR.h"  // Incluir después de la declaración de BigNumber<Base>

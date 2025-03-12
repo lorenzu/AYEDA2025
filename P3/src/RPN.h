@@ -7,11 +7,13 @@
 #include <memory>
 #include "BigNumber.h"  // Incluye BigInteger, BigUnsigned, BigRational
 
+// **Clase RPNCalculator**
 template <unsigned char Base>
 class RPNCalculator {
 private:
     std::map<std::string, std::unique_ptr<BigNumber<Base>>> board;
 
+    // **Evalúa la expresión en notación polaca inversa**
     BigNumber<Base>* evaluateRPN(const std::string& expression) {
         std::stack<BigNumber<Base>*> operands;
         std::istringstream iss(expression);
@@ -19,7 +21,7 @@ private:
 
         while (iss >> token) {
             if (board.find(token) != board.end()) {
-                operands.push(board[token].get());
+                operands.push(board[token].get());  // Usa el puntero almacenado
             } else if (isOperator(token)) {
                 if (operands.size() < 2) {
                     std::cerr << "Error: Expresión inválida." << std::endl;
@@ -68,10 +70,7 @@ public:
     }
 };
 
-// **Declaración de la función antes de su uso**
-template <unsigned char Base>
-void processFileWithCalculator(std::ifstream& in, std::ofstream& out, RPNCalculator<Base>& calculator);
-
+// **Función para procesar el archivo**
 void processFile(const std::string& inputFile, const std::string& outputFile) {
     std::ifstream in(inputFile);
     std::ofstream out(outputFile);
@@ -82,9 +81,9 @@ void processFile(const std::string& inputFile, const std::string& outputFile) {
     }
 
     std::string line;
-    int base = 10;
+    int base = 10;  // Base predeterminada en caso de que no se especifique en el archivo
 
-    // **Buscar la base en el archivo**
+    // **Leer la base del archivo**
     while (std::getline(in, line)) {
         std::istringstream iss(line);
         std::string label, op, value;
@@ -92,7 +91,7 @@ void processFile(const std::string& inputFile, const std::string& outputFile) {
 
         if (label == "Base" && op == "=") {
             iss >> base;
-            break;
+            break;  // Se encontró la base, salir del bucle
         }
     }
 
@@ -101,33 +100,29 @@ void processFile(const std::string& inputFile, const std::string& outputFile) {
         return;
     }
 
-    RPNCalculator<10>* calculator10 = nullptr;
-    RPNCalculator<16>* calculator16 = nullptr;
-    RPNCalculator<8>* calculator8 = nullptr;
-
+    // **Crear la calculadora con la base leída**
     if (base == 10) {
-        calculator10 = new RPNCalculator<10>();
-        processFileWithCalculator(in, out, *calculator10);
-        delete calculator10;
+        auto calculator = std::make_unique<RPNCalculator<10>>();
+        processFileWithCalculator(in, out, *calculator);
     } else if (base == 16) {
-        calculator16 = new RPNCalculator<16>();
-        processFileWithCalculator(in, out, *calculator16);
-        delete calculator16;
+        auto calculator = std::make_unique<RPNCalculator<16>>();
+        processFileWithCalculator(in, out, *calculator);
     } else if (base == 8) {
-        calculator8 = new RPNCalculator<8>();
-        processFileWithCalculator(in, out, *calculator8);
-        delete calculator8;
+        auto calculator = std::make_unique<RPNCalculator<8>>();
+        processFileWithCalculator(in, out, *calculator);
     } else {
         std::cerr << "Error: Base no soportada." << std::endl;
     }
+
+    in.close();
+    out.close();
 }
 
-// **Procesar el archivo con la calculadora ya creada**
+// **Función auxiliar para procesar el archivo con la calculadora correcta**
 template <unsigned char Base>
 void processFileWithCalculator(std::ifstream& in, std::ofstream& out, RPNCalculator<Base>& calculator) {
     std::map<std::string, std::unique_ptr<BigNumber<Base>>>& board = calculator.getBoard();
     std::string line;
-    out << "Base = " << static_cast<int>(Base) << std::endl;
 
     while (std::getline(in, line)) {
         std::istringstream iss(line);
@@ -147,31 +142,4 @@ void processFileWithCalculator(std::ifstream& in, std::ofstream& out, RPNCalcula
     }
 }
 
-int main(int argc, char* argv[]) {
-    processFile("./src/ex.txt", "ex_out.txt");
-    //processFile("ex.txt", "ex_out.txt");
-    //bignumber es la clase base
-    /*
-    BigNumber<10> *a = new BigInteger<10>("123");
-    BigNumber<10> *b = new BigRational<10>("456", "789");
-    BigNumber<10> *c = new BigUnsigned<10>("789");
 
-    std::cout << *a << std::endl;
-    std::cout << *b << std::endl;
-
-    //como puedo sumar a y b
-    BigNumber<10> *d = &a->add(*b);
-    BigNumber<10> *f = &a->add(*b);
-    BigNumber<10> *e = &a->add(*c);
-
-    std::cout << *d << std::endl;
-    std::cout << *f << std::endl; 
-    std::cout << *e << std::endl;
-    */
-
-    /// TO DO COMPROBAR LOS DYNAMIC CASTING EN BIG INT MAS QUE SEA
-
-
-
-    return 0;
-}

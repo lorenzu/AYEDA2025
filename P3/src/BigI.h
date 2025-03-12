@@ -516,31 +516,67 @@ BigInteger<Base>::operator BigUnsigned<Base>() const{
 }
 
 template <unsigned char Base>
-BigNumber<Base>& BigInteger<Base>::add(const BigNumber<Base>& a) const{
-  const BigInteger<Base>& temp = dynamic_cast<const BigInteger<Base>&>(a);
-  BigInteger<Base> *result = new BigInteger<Base>(*this + temp);
-  return *result;
+BigNumber<Base>& BigInteger<Base>::add(const BigNumber<Base>& a) const {
+    if (const BigInteger<Base>* intOther = dynamic_cast<const BigInteger<Base>*>(&a)) {
+        return *(new BigInteger<Base>(*this + *intOther));
+    } else if (const BigUnsigned<Base>* uintOther = dynamic_cast<const BigUnsigned<Base>*>(&a)) {
+        // Convertimos el BigUnsigned a un BigInteger y luego sumamos
+        BigInteger<Base> otherInt(*uintOther);  // Construcción segura
+        return *(new BigInteger<Base>(*this + otherInt)); // SUMA SEGURA
+    } else if (const BigRational<Base>* ratOther = dynamic_cast<const BigRational<Base>*>(&a)) {
+        // Convertimos this a BigRational y realizamos la suma
+        BigRational<Base> thisAsRational(*this, "1");
+        return *(new BigRational<Base>(thisAsRational + *ratOther));
+    }
+    throw std::invalid_argument("Tipo de BigNumber no compatible con add()");
 }
 
 template <unsigned char Base>
 BigNumber<Base>& BigInteger<Base>::subtract(const BigNumber<Base>& a) const{
-  const BigInteger<Base>& temp = dynamic_cast<const BigInteger<Base>&>(a);
-  BigInteger<Base> *result = new BigInteger<Base>(*this - temp);
-  return *result;
+  if (const BigInteger<Base>* intOther = dynamic_cast<const BigInteger<Base>*>(&a)) {
+    return *(new BigInteger<Base>(*this - *intOther));
+} else if (const BigUnsigned<Base>* uintOther = dynamic_cast<const BigUnsigned<Base>*>(&a)) {
+    // Convertimos el BigUnsigned a un BigInteger y luego sumamos
+    BigInteger<Base> otherInt(*uintOther);  // Construcción segura
+    return *(new BigInteger<Base>(*this - otherInt)); // SUMA SEGURA
+} else if (const BigRational<Base>* ratOther = dynamic_cast<const BigRational<Base>*>(&a)) {
+    // Convertimos this a BigRational y realizamos la suma
+    BigRational<Base> thisAsRational(*this, "1");
+    return *(new BigRational<Base>(thisAsRational - *ratOther));
+}
+throw std::invalid_argument("Tipo de BigNumber no compatible con add()");
 }
 
 template <unsigned char Base>
 BigNumber<Base>& BigInteger<Base>::multiply(const BigNumber<Base>& a) const{
-  const BigInteger<Base>& temp = dynamic_cast<const BigInteger<Base>&>(a);
-  BigInteger<Base> *result = new BigInteger<Base>(*this * temp);
-  return *result;
+  if (const BigInteger<Base>* intOther = dynamic_cast<const BigInteger<Base>*>(&a)) {
+    return *(new BigInteger<Base>(*this * *intOther));
+} else if (const BigUnsigned<Base>* uintOther = dynamic_cast<const BigUnsigned<Base>*>(&a)) {
+    // Convertimos el BigUnsigned a un BigInteger y luego sumamos
+    BigInteger<Base> otherInt(*uintOther);  // Construcción segura
+    return *(new BigInteger<Base>(*this * otherInt)); // SUMA SEGURA
+} else if (const BigRational<Base>* ratOther = dynamic_cast<const BigRational<Base>*>(&a)) {
+    // Convertimos this a BigRational y realizamos la suma
+    BigRational<Base> thisAsRational(*this, "1");
+    return *(new BigRational<Base>(thisAsRational * *ratOther));
+}
+throw std::invalid_argument("Tipo de BigNumber no compatible con add()");
 }
 
 template <unsigned char Base>
 BigNumber<Base>& BigInteger<Base>::divide(const BigNumber<Base>& a) const{
-  const BigInteger<Base>& temp = dynamic_cast<const BigInteger<Base>&>(a);
-  BigInteger<Base> *result = new BigInteger<Base>(*this / temp);
-  return *result;
+  if (const BigInteger<Base>* intOther = dynamic_cast<const BigInteger<Base>*>(&a)) {
+    return *(new BigInteger<Base>(*this / *intOther));
+} else if (const BigUnsigned<Base>* uintOther = dynamic_cast<const BigUnsigned<Base>*>(&a)) {
+    // Convertimos el BigUnsigned a un BigInteger y luego sumamos
+    BigInteger<Base> otherInt(*uintOther);  // Construcción segura
+    return *(new BigInteger<Base>(*this / otherInt)); // SUMA SEGURA
+} else if (const BigRational<Base>* ratOther = dynamic_cast<const BigRational<Base>*>(&a)) {
+    // Convertimos this a BigRational y realizamos la suma
+    BigRational<Base> thisAsRational(*this, "1");
+    return *(new BigRational<Base>(thisAsRational / *ratOther));
+}
+throw std::invalid_argument("Tipo de BigNumber no compatible con add()");
 }
 
 
