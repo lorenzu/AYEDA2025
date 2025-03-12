@@ -38,7 +38,7 @@ class BigInteger : public BigNumber<Base> {
   friend BigInteger<B> operator/(const BigInteger<B>&, const BigInteger<B>&);
   BigInteger<Base> operator%(const BigInteger<Base>&) const;
 
-  //BigNumber<Base>& add(const BigNumber<Base>&) const override;
+  BigNumber<Base>& add(const BigNumber<Base>&) const override;
   //BigNumber<Base>& subtract(const BigNumber<Base>&) const override;
   //BigNumber<Base>& multiply(const BigNumber<Base>&) const override;
   //BigNumber<Base>& divide(const BigNumber<Base>&) const override;
@@ -507,6 +507,13 @@ template <unsigned char Base>
 BigInteger<Base>::operator BigUnsigned<Base>() const{
   BigUnsigned<Base> temp(this->num);
   return temp;
+}
+
+template <unsigned char Base>
+BigNumber<Base>& BigInteger<Base>::add(const BigNumber<Base>& a) const{
+  const BigInteger<Base>& temp = dynamic_cast<const BigInteger<Base>&>(a);
+  BigInteger<Base> *result = new BigInteger<Base>(*this + temp);
+  return *result;
 }
 
 

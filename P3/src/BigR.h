@@ -27,7 +27,7 @@ class BigRational: public BigNumber<Base>{
   BigRational<Base> operator-(const BigRational<Base>&) const;
   BigRational<Base> operator*(const BigRational<Base>&) const;
 
-  //BigNumber<Base>& add(const BigNumber<Base>&) const override;
+  BigNumber<Base>& add(const BigNumber<Base>&) const override;
   //BigNumber<Base>& subtract(const BigNumber<Base>&) const override;
   //BigNumber<Base>& multiply(const BigNumber<Base>&) const override;
   //BigNumber<Base>& divide(const BigNumber<Base>&) const override;
@@ -43,6 +43,14 @@ class BigRational: public BigNumber<Base>{
   BigInteger<Base> numerador;
   BigUnsigned<Base> denominador;
 };
+
+template <unsigned char Base>
+BigNumber<Base>& BigRational<Base>::add(const BigNumber<Base>& a) const{
+  BigRational<Base> temp = dynamic_cast<const BigRational<Base>&>(a);
+  BigRational<Base> *result = new BigRational<Base>(*this + temp);
+  return *result;
+}
+
 
 //operador BigRational
 template <unsigned char Base>
@@ -107,8 +115,8 @@ template <unsigned char Base>
 BigRational<Base> operator+(const BigRational<Base>& a, const BigRational<Base>& b){
   BigRational<Base> temp;
   temp.denominador = a.denominador * b.denominador;
-  BigInteger<Base> temp1 = a.numerador * b.denominador;
-  BigInteger<Base> temp2 = b.numerador * a.denominador;
+  BigInteger<Base> temp1 = BigInteger<Base>(a.numerador) * BigInteger<Base>(b.denominador);
+  BigInteger<Base> temp2 = BigInteger<Base>(b.numerador) * BigInteger<Base>(a.denominador);
   temp.numerador = temp1 + temp2;
   return temp;
 }
