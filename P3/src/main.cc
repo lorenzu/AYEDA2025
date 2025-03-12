@@ -72,7 +72,7 @@ public:
         }
 
         string line;
-        unsigned char base = 10;
+        std::string base;
 
         while (getline(in, line)) {
             istringstream iss(line);
@@ -81,7 +81,6 @@ public:
 
             if (label == "Base" && op == "=") {
                 iss >> base;
-                out << "Base = " << static_cast<int>(base) << endl;
             } else if (op == "=") {
                 iss >> value;
                 board[label] = unique_ptr<BigNumber<Base>>(BigNumber<Base>::create(value.c_str()));
@@ -102,7 +101,8 @@ public:
 int main(int argc, char* argv[]) {
 
     RPNCalculator<10> calculator;
-    calculator.processFile("./src/ex.txt", "ex_out.txt");
+    //calculator.processFile("./src/ex.txt", "ex_out.txt");
+    calculator.processFile("ex.txt", "ex_out.txt");
 
     return 0;
 }

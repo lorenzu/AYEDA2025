@@ -50,7 +50,7 @@ class BigInteger : public BigNumber<Base> {
 
   protected:
   std::ostream& write(std::ostream&) const override;
-  //std::istream& read(std::istream&) override;
+  std::istream& read(std::istream&) override;
 
   private:
   BigUnsigned<Base> num;
@@ -489,6 +489,11 @@ std::ostream& BigInteger<Base>::write(std::ostream& os) const{
   }
   os << this->num;
   return os;
+}
+
+template <unsigned char Base>
+std::istream& BigInteger<Base>::read(std::istream& is){
+  return is >> *this;
 }
 
 // operator BigInteger<Base>

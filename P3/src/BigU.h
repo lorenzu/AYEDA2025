@@ -58,13 +58,18 @@ class BigUnsigned : public BigNumber<Base> {
 
   protected:
   std::ostream& write(std::ostream&) const override;
-  //std::istream& read(std::istream&) override;
+  std::istream& read(std::istream&) override;
 
   
   private:
   std::vector<unsigned char> digits;
 
 };
+
+template <unsigned char Base>
+std::istream& BigUnsigned<Base>::read(std::istream& is){
+  return is >> *this;
+}
 
 template <unsigned char Base>
 BigNumber<Base>& BigUnsigned<Base>::divide(const BigNumber<Base>& a) const{

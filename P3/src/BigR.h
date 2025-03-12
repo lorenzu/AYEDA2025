@@ -39,7 +39,7 @@ class BigRational: public BigNumber<Base>{
 
   protected:
   std::ostream& write(std::ostream&) const override;
-  //std::istream& read(std::istream&) override;
+  std::istream& read(std::istream&) override;
 
   private:
   BigInteger<Base> numerador;
@@ -128,9 +128,9 @@ std::istream& operator>>(std::istream& is, BigRational<Base>& a){
   std::string token;
   pos = temp.find(delimiter);
   token = temp.substr(0, pos);
-  a.numerador = BigInteger<Base>(token);
+  a.numerador = BigInteger<Base>(token.c_str());
   temp.erase(0, pos + delimiter.length());
-  a.denominador = BigUnsigned<Base>(temp);
+  a.denominador = BigUnsigned<Base>(temp.c_str());
   return is;
 }
 
@@ -181,4 +181,10 @@ BigRational<Base> BigRational<Base>::operator/(const BigRational<Base>& a) const
   temp.numerador = this->numerador * BigInteger<Base>(a.denominador);
   temp.denominador = this->denominador * a.numerador;
   return temp;
+}
+
+
+template <unsigned char Base>
+std::istream& BigRational<Base>::read(std::istream& is){
+  return is >> *this;
 }

@@ -32,6 +32,7 @@ public:
 
 protected:
     virtual std::ostream& write(std::ostream&) const = 0;
+    virtual std::istream& read(std::istream&) = 0;
 
     template <unsigned char B>
     friend std::ostream& operator<<(std::ostream&, const BigNumber<B>&);
