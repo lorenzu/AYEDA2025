@@ -36,7 +36,7 @@ public:
     } else {
       anterior->setDcho(nuevo);
     }
-    std::cout << Alt() << std::endl;
+
     return true;
   }
 
@@ -92,25 +92,6 @@ public:
       ++nivel;
     }
   }
-
-  const int Tam() { return TamRama(this->raiz); }
-  const int TamRama(NodoB<Key>* nodo) {
-  if (nodo == NULL) return 0 ;
-  return (1 + TamRama(nodo->izdo) + 
-              TamRama(nodo->dcho) );
-}
-const int Alt() { return AltN(this->raiz); }
-const int AltN(NodoB<Key>* nodo) {
-  if (nodo == NULL)
-    return 0 ;
-  int alt_i = AltN(nodo->getIzdo());
-  int alt_d = AltN(nodo->getDcho());
-  if (alt_d > alt_i) 
-    return ++alt_d;
-  else 
-    return ++alt_i; 
-}
-
 
 private:
   // Método privado para recorrer el árbol en inorden

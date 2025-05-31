@@ -10,11 +10,13 @@
 #include "NodoB.h"
 #include "AVL.h"
 
+// un contador para cada tipo, si la rotacion es II o DD se incrementa en 1 cuando el nodo es par, si la rotacion es ID o DI se incrementa en 1 cuando el nodo es impar
+
 void parseArguments(int argc, char* argv[], std::string& ab, std::string& init, std::string& filename, std::string& initType, bool &trace, int &size) {
   bool random = false;
   bool manual = false;
   if (argc < 2) {
-    std::cerr << "Uso: " << argv[0] << " -size <tamaño> -ord <método> -init <tipo> [-trace <y/n>]" << std::endl;
+    std::cerr << "Uso: " << argv[0] << " -ab <avl|abb> -trace <y|n> -init <file [filename]|random [size]|manual>" << std::endl;
     exit(1);
   }
     for (int i = 1; i < argc; ++i) {

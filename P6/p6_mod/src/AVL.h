@@ -46,6 +46,14 @@ int alturaN(NodoAVL<Key>* nodo) const {
   if (this->trace) {
     std::cout << "Rotation II en [" << nodo->getDato() << "(" << alturaN(nodo->getIzdo()) - alturaN(nodo->getDcho()) << ")]" << std::endl;
   }
+    if (nodo->getDato() % 2 == 0) {
+      counter_II++;
+    std::cout << "Counter II incrementado" << std::endl;
+    }
+    std::cout << "Counter DI: " << counter_DI << std::endl;
+    std::cout << "Counter ID: " << counter_ID << std::endl;
+    std::cout << "Counter II: " << counter_II << std::endl;
+    std::cout << "Counter DD: " << counter_DD << std::endl;
     NodoAVL<Key>* nodo1 = nodo->getIzdo();
     nodo->setIzdo(nodo1->getDcho());
     nodo1->setDcho(nodo);
@@ -63,6 +71,14 @@ int alturaN(NodoAVL<Key>* nodo) const {
   if (this->trace) {
     std::cout << "Rotation DD en [" << nodo->getDato() << "(" << alturaN(nodo->getIzdo()) - alturaN(nodo->getDcho()) << ")]" << std::endl;
   }
+    if (nodo->getDato() % 2 == 0) {
+      counter_DD++;
+    std::cout << "Counter DD incrementado" << std::endl;
+    }
+    std::cout << "Counter DI: " << counter_DI << std::endl;
+    std::cout << "Counter ID: " << counter_ID << std::endl;
+    std::cout << "Counter II: " << counter_II << std::endl;
+    std::cout << "Counter DD: " << counter_DD << std::endl;
     NodoAVL<Key>* nodo1 = nodo->getDcho();
     nodo->setDcho(nodo1->getIzdo());
     nodo1->setIzdo(nodo);
@@ -80,6 +96,14 @@ int alturaN(NodoAVL<Key>* nodo) const {
   if (this->trace) {
     std::cout << "Rotation ID en [" << nodo->getDato() << "(" << alturaN(nodo->getIzdo()) - alturaN(nodo->getDcho()) << ")]" << std::endl;
   }
+    if (nodo->getDato() % 2 != 0) {
+      counter_ID++;
+      std::cout << "Counter ID incrementado" << std::endl;
+    }
+    std::cout << "Counter DI: " << counter_DI << std::endl;
+    std::cout << "Counter ID: " << counter_ID << std::endl;
+    std::cout << "Counter II: " << counter_II << std::endl;
+    std::cout << "Counter DD: " << counter_DD << std::endl;
     NodoAVL<Key>* nodo1 = nodo->getIzdo();
     NodoAVL<Key>* nodo2 = nodo1->getDcho();
     nodo->setIzdo(nodo2->getDcho());
@@ -104,6 +128,14 @@ int alturaN(NodoAVL<Key>* nodo) const {
   if (this->trace) {
     std::cout << "Rotation DI en [" << nodo->getDato() << "(" << alturaN(nodo->getIzdo()) - alturaN(nodo->getDcho()) << ")]" << std::endl;
   }
+    if (nodo->getDato() % 2 != 0) {
+      counter_DI++;
+    std::cout << "Counter DI incrementado" << std::endl;
+    }
+    std::cout << "Counter DI: " << counter_DI << std::endl;
+    std::cout << "Counter ID: " << counter_ID << std::endl;
+    std::cout << "Counter II: " << counter_II << std::endl;
+    std::cout << "Counter DD: " << counter_DD << std::endl;
     NodoAVL<Key>* nodo1 = nodo->getDcho();
     NodoAVL<Key>* nodo2 = nodo1->getIzdo();
     nodo->setDcho(nodo2->getIzdo());
@@ -134,7 +166,8 @@ int alturaN(NodoAVL<Key>* nodo) const {
         nodo->setBal(1);
         break;
       case 1:
-        if(nodo->getBal() == 1){
+        NodoAVL<Key>* nodo1 = nodo->getIzdo();
+        if(nodo1->getBal() == 1){
           rotacion_II(nodo);
         } else {
           rotacion_ID(nodo);
@@ -153,7 +186,8 @@ int alturaN(NodoAVL<Key>* nodo) const {
         nodo->setBal(-1);
         break;
       case -1:
-        if(nodo->getBal() == -1){
+      NodoAVL<Key>* nodo1 = nodo->getDcho();
+        if(nodo1->getBal() == -1){
           rotacion_DD(nodo);
         } else {
           rotacion_DI(nodo);
@@ -180,30 +214,10 @@ int alturaN(NodoAVL<Key>* nodo) const {
       }
   }
 
-  const int Tam() { return TamRama(this->getRaiz()); }
-  const int TamRama(NodoAVL<Key>* nodo) {
-  if (nodo == NULL) return 0 ;
-  return (1 + TamRama(nodo->getIzdo()) + 
-              TamRama(nodo->getDcho()) );
-}
-const int Alt() { return AltN(this->getRaiz()); }
-const int AltN(NodoAVL<Key>* nodo) {
-  if (nodo == NULL)
-    return 0 ;
-  int alt_i = AltN(nodo->getIzdo());
-  int alt_d = AltN(nodo->getDcho());
-  if (alt_d > alt_i) 
-    return ++alt_d;
-  else 
-    return ++alt_i; 
-}
-
   bool insertar(const Key& valor) override {
-    NodoAVL<Key>* nuevo = new NodoAVL<Key>(valor);
+    NodoAVL<Key>* nuevo = new NodoAVL<Key>(valor, 0);
     bool crece = false;
     insertar_bal(getRaiz(), nuevo, crece);
-    int altura = Alt();
-    std::cout << altura << std::endl;
     return true;
   }
 
@@ -237,6 +251,10 @@ const int AltN(NodoAVL<Key>* nodo) {
 
   private:
   bool trace;
+  int counter_DD = 0;
+  int counter_II = 0;
+  int counter_DI = 0;
+  int counter_ID = 0;
     
 };
 #endif

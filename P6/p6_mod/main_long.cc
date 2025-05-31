@@ -68,6 +68,7 @@ int main(int argc, char* argv[]){
   int size;
   int option = 9;
   parseArguments(argc, argv, ab, init, filename, initType, trace, size);
+  std::cout << trace << std::endl;
   // inicializar un puntero AB<Key> a nullptr y según la opción ab se debe instanciar un objeto de la clase correspondiente
   AB<int>* arbol = nullptr;
   if(ab == "abe"){
@@ -87,7 +88,9 @@ int main(int argc, char* argv[]){
 
   if(initType == "random"){
     for(int i = 0; i < size; i++){
-      int nif = rand() % 10000 + 100000;
+      int nif;
+      //genera un int random y lo inserta en el árbol
+      nif = rand() % 1 + 100; // Modifica según el rango de tus datos
       arbol->insertar(nif);
     }
   } else if(initType == "file"){
