@@ -38,6 +38,10 @@ void baja(int i , std::vector<int> &seq, int size){
       i = heap;
     };
   };
+    for(auto i : seq){
+  std::cout << i << " ";
+}
+std::cout << std::endl;
 };
 
 /*
@@ -51,6 +55,11 @@ void HeapSort(std::vector<int> &seq, int size){
   for(int i = (size/2) -1; i >= 0; i--){
     baja(i, seq, size);
   }
+  std::cout << "Despues de la insercion" << std::endl;
+  for(auto i : seq){
+  std::cout << i << " ";
+}
+std::cout << std::endl;
   for (int i = size - 1; i >= 0; i--){
     std::swap(seq[0], seq[i]);
     baja(0, seq, i);
