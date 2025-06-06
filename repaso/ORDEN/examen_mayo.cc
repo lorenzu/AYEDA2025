@@ -7,39 +7,70 @@
 //creo que era ak reves
 // por ultimo mezcla del mergesort
 
-void Insercion(std::vector<int> &seq, int size) {
-  for (int i = 1; i < size; i++){
-    if(i % 2 != 0){
-    int j = i-1;
-    int aux = seq[i];
-    while (j >= 0 && aux > seq[j]){
-      seq[j+1] = seq[j];
-      j--;
+void Ordenar(std::vector<int> &sec, int size){
+  for(int i = 3; i < size; i+=2){
+    int aux = sec[i];
+    int j = i - 2;
+    while((j >= 1) && (aux < sec[j])){
+    sec[j+2] = sec[j];      
+    j-=2;
     }
-    seq[j+1] = aux;
-    }
+    sec[j+2] = aux;
   }
-}
-
-void Seleccion(std::vector<int> &seq, int size){
-  for (int i = 0; i < size; i++){
-    if(i % 2 == 0){
-    int minIndex = i;
-    int j = i + 1;
-    for (j; j < size; j++){
-      if(seq[j] < seq[minIndex]){
-        minIndex = j;
+  std::cout << "IMPARES ORDENADOS CON INSERCION DE MENOR A MAYOR" << std::endl;
+  for(int i = 1; i < size ; i+=2){
+    std::cout << sec[i] << " ";
+  }
+  std::cout << std::endl;
+  for (int i = 0; i < size; i+=2){
+    int maxIndex = i;
+    for(int j = i + 2; j < size; j+=2){
+      if(sec[j] > sec[maxIndex]){
+        maxIndex = j;
       }
     }
-    int temp = seq[minIndex];
-    seq[minIndex] = seq[i];
-    seq[i] = temp; 
+    std::swap(sec[i], sec[maxIndex]); 
   }
+  std::cout << "PARES ORDENADOS CON SELECCION DE MAYO A MENOR" << std::endl;
+  for(int i = 0; i < size ; i+=2){
+    std::cout << sec[i] << " ";
+  }
+  std::cout << std::endl;
+  int i;
+  if(size % 2 == 0){
+    i = size - 2;
+  } else {
+    i = size - 1;
+  }
+  int j = 1;
+  int k = 0;
+  std::vector<int> aux(size-1);
+  while(i >= 0 && j < size){
+    if(sec[i] < sec[j]){
+      aux[k] = sec[i];
+      i-=2;
+    } else {
+      aux[k] = sec[j];
+      j+=2;
+    }
+    k++;
+  }
+  if (i < 0){
+    while(j < size){
+      aux[k] = sec[j];
+      j+=2; k++;
+    } 
+  } else {
+    while(i >= 0){
+      aux[k] = sec[i];
+      i-=2; k++;
+    }
+  }
+
+  for(int i = 0; i < size; i++){
+    sec[i] = aux[i];
   }
 }
-
-//void Merge()
-
 
 
 
@@ -48,10 +79,10 @@ int main(){
   std::vector<int> sequence = {212, 237, 342, 132, 368, 347, 174, 672, 230, 154};
   int size = sequence.size();
   
-  Seleccion(sequence, size);
+  Ordenar(sequence, size);
   
   for(auto i : sequence){
     std::cout << i << " ";
   }
-  
+  std::cout << std::endl; 
   }
