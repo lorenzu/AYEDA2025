@@ -12,6 +12,7 @@ void BubbleSort(std::vector<int> &seq, int size){
       }
     }
   }
+  
 }
 
 int main(){
